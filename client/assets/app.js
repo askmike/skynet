@@ -1,8 +1,3 @@
-var content = {
-  male: { text: 'I am a boy.' },
-  female: { text: 'I am a girl.' }
-}
-
 var init = function() {
   var socket = io.connect('http://localhost:1337');
 
@@ -20,7 +15,7 @@ var init = function() {
 
   var updateContent = function(segment) {
     if(segment === current)
-      return;$('main').show().addClass().children()
+      return;
 
     el
       .removeClass()

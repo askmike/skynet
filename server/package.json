@@ -1,0 +1,19 @@
+{
+  "name": "skynet",
+  "preferGlobal": false,
+  "version": "0.0.1",
+  "author": "Mike van Rossum <mike@mikevanrossum.nl>",
+  "description": "A proof of concept adaptive content system",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/askmike/skynet.git"
+  },
+  "dependencies" : {
+    "socket.io":  "0.9.x",
+    "underscore" :  "1.4.x"
+  },  
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.7"
+  }
+}
