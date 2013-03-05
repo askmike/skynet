@@ -8,3 +8,5 @@ Make sure `node` and `npm` are installed and run:
 
     cd server && npm install
     node app
+
+And browse to `http://localhost:1337`
