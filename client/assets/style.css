@@ -22,10 +22,22 @@ main {
   position: absolute;
 }
 
-main.female {
+.female {
   background-color: pink;
 }
 
-main.male {
+.male {
   background-color: blue;
+}
+
+.segment {
+  display: block;
+  width: 480px;
+  height: 320px;
+  line-height: 320px;
+  text-align: center;
+  color: black;
+  font-size: 30px;
+  font-family: helvetica;
+  text-decoration: none;
 }

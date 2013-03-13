@@ -8,18 +8,13 @@ var file = new(static.Server)('../client', {
   cache: 5,
   headers: { 'X-Powered-By': 'node-static' }
 });
-
 var handler = function(req, res) {
   req.addListener('end', function() {
     file.serve(req, res, function(err, result) {
       if (err) {
         console.error('Error serving %s - %s', req.url, err.message);
-        if (err.status === 404 || err.status === 500) {
-          // file.serveFile(util.format('/%d.html', err.status), err.status, {}, req, res);
-        } else {
-          res.writeHead(err.status, err.headers);
-          res.end();
-        }
+        res.writeHead(err.status, err.headers);
+        res.end();
       } else {
         console.log('%s - %s', req.url, res.message);
       }
@@ -29,10 +24,9 @@ var handler = function(req, res) {
 
 var app = require('http').createServer(handler)
   , io = require('socket.io').listen(app)
-  , fs = require('fs')
+  , fs = require('fs');
 
-app.listen(1337);
-
+app.listen(3337);
 
 
 var segments = [
@@ -40,14 +34,20 @@ var segments = [
   { segment: 'female' }
 ], len = segments.length;
 
-var getRandomSegment = function() {
-  return segments[parseInt(Math.random() * len)];
-};
+// var getRandomSegment = function() {
+//   return segments[parseInt(Math.random() * len)];
+// };
 
 io.sockets.on('connection', function(socket) {
-  socket.emit('newSegment', getRandomSegment());
+  socket.emit('newSegment', { segment: 'male' });
+  socket.on('updateSegment', function(segment) {
+    console.log('got new segment', segment);
+    io.sockets.emit('newSegment', segment);
+  });
 });
 
-setInterval(function() {
-    io.sockets.emit('newSegment', getRandomSegment());
-}, (Math.random() * 3000) + 2000);
+// io.sockets.on('message', 
+
+// setInterval(function() {
+    // io.sockets.emit('newSegment', getRandomSegment());
+// }, (Math.random() * 3000) + 2000);
