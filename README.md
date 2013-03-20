@@ -1,6 +1,6 @@
 # Skynet
 
-Skynet is a proof of concept application which uses an audience measurement system to create adapt the content in realtime to the audience. The system consists of a (nodejs) server application which is connected to the audience measurement system and a (webbased) client application.
+Skynet is a proof of concept application which uses an audience measurement system to 1) adapt the content in realtime to the audience and 2) gather statistics of the audience. The system consists of a (nodejs) server application which is connected to the audience measurement system and a (webbased) client application.
 
 # Install
 

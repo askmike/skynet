@@ -1,6 +1,4 @@
 var _ = require('underscore');
-var http = require('http');
-var util = require('util');
 var static = require('node-static');
 
 // @link http://www.sitepoint.com/serving-static-files-with-node-js/
@@ -15,9 +13,11 @@ var processInput = require('./input.js').process;
 var sockets = require('./sockets.js');
 
 var handler = function(req, res) {
+  // if the request is data from the audience measuerment software route to input.js
   if(req.url.indexOf('/eyeface-logviewer/') !== -1)
     return processInput(req, res, sockets.update);
 
+  // else it's static content
   req.addListener('end', function() {
     file.serve(req, res, function(err, result) {
       if (err) {

@@ -44,8 +44,6 @@ var extractGender = function(body, next) {
   if(gender === lastGender)
     return;
 
-
-
   next && next(gender);
   lastGender = gender;
 }
