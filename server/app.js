@@ -6,48 +6,31 @@ var static = require('node-static');
 // @link http://www.sitepoint.com/serving-static-files-with-node-js/
 var file = new(static.Server)('../client', {
   cache: 5,
-  headers: { 'X-Powered-By': 'node-static' }
+  headers: { 'X-Powered-By': 'SKYNET' }
 });
+
+// process the input received from a third party audience measurement 
+var processInput = require('./input.js').process;
+// push the results to a webclient to adapt the content
+var sockets = require('./sockets.js');
+
 var handler = function(req, res) {
+  if(req.url.indexOf('/eyeface-logviewer/') !== -1)
+    return processInput(req, res, sockets.update);
+
   req.addListener('end', function() {
     file.serve(req, res, function(err, result) {
       if (err) {
         console.error('Error serving %s - %s', req.url, err.message);
         res.writeHead(err.status, err.headers);
         res.end();
-      } else {
-        console.log('%s - %s', req.url, res.message);
       }
     });
   });
 };
 
-var app = require('http').createServer(handler)
-  , io = require('socket.io').listen(app)
-  , fs = require('fs');
+var app = require('http').createServer(handler);
 
-app.listen(3337);
-
-
-var segments = [
-  { segment: 'male' },
-  { segment: 'female' }
-], len = segments.length;
-
-// var getRandomSegment = function() {
-//   return segments[parseInt(Math.random() * len)];
-// };
-
-io.sockets.on('connection', function(socket) {
-  socket.emit('newSegment', { segment: 'male' });
-  socket.on('updateSegment', function(segment) {
-    console.log('got new segment', segment);
-    io.sockets.emit('newSegment', segment);
-  });
-});
-
-// io.sockets.on('message', 
-
-// setInterval(function() {
-    // io.sockets.emit('newSegment', getRandomSegment());
-// }, (Math.random() * 3000) + 2000);
+sockets.init(app);
+app.listen(1340);
+console.log('SKYNET is watching us');

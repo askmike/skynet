@@ -1,5 +1,5 @@
 var init = function() {
-  var socket = io.connect('http://mvr.me:3337');
+  var socket = io.connect('http://mvr.me:1340');
 
   var page = $('html').data('page');
 
