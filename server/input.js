@@ -1,6 +1,6 @@
 var _ = require('underscore');
 
-var storePing = function(req, res, next) {
+var process = function(req, res, next) {
   var body = '';
   req.on('data', function(chunk) {
     body += chunk.toString();
@@ -8,7 +8,6 @@ var storePing = function(req, res, next) {
   req.on('end', function() {
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.end('I AM ALIVE');
-    body = body.split('&');
     
     extractGender(body, next);
   });
@@ -21,14 +20,16 @@ var storePing = function(req, res, next) {
 //
 // gender < -0.1 = male
 // gender > 0.1 = female
-var lastGender;
+var lastGender, i = 1;
 var extractGender = function(body, next) {
+  body = body.split('&');
+  
   var result = {};
   _.each(body, function(part) {
     part = part.split('=');
     result[part[0]] = part[1];
   });
-
+  
   if(!result.gender)
     return;
   var gender = parseFloat(result.gender);
@@ -41,14 +42,10 @@ var extractGender = function(body, next) {
   else
     gender = 'female';
 
-  if(gender === lastGender)
-    return;
-
-  next && next(gender);
-  lastGender = gender;
+  next && next(gender, result.age);
 }
 
-exports.process = storePing;
+exports.process = process;
 
 
 // generate fake random input for debugging

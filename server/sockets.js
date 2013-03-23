@@ -15,7 +15,7 @@ var init = function(app) {
 }
 
 var updateClient = function(seg) {
-  console.log('new segment\t' + seg);
+  console.log('sending new segment:\t' + seg);
   io.sockets.emit('newSegment', {segment: seg});
   lastSeg = seg;
 }

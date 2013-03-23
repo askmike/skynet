@@ -11,13 +11,19 @@ var file = new(static.Server)('../client', {
 var processInput = require('./input.js').process;
 // push the results to a webclient to adapt the content
 var sockets = require('./sockets.js');
+// store data (model layer)
+var log = require('./datastore.js');
 
 var handler = function(req, res) {
   // if the request is data from the audience measuerment software route to input.js
   if(req.url.indexOf('/eyeface-logviewer/') !== -1)
-    return processInput(req, res, sockets.update);
+    return processInput(req, res, log.user);
 
-  // else it's static content
+  staticHandler(req, res);
+};
+
+// serve a static file
+var staticHandler = function(req, res) {
   req.addListener('end', function() {
     file.serve(req, res, function(err, result) {
       if (err) {
@@ -27,7 +33,8 @@ var handler = function(req, res) {
       }
     });
   });
-};
+
+}
 
 var app = require('http').createServer(handler);
 
