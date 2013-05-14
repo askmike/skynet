@@ -9,7 +9,7 @@ var process = function(req, res, next) {
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.end('I AM ALIVE');
     
-    extractGender(body, next);
+    extractGender(body, next, req);
   });
 };
 
@@ -21,7 +21,11 @@ var process = function(req, res, next) {
 // gender < -0.1 = male
 // gender > 0.1 = female
 var lastGender, i = 1;
-var extractGender = function(body, next) {
+var extractGender = function(body, next, req) {
+
+  console.log('new message', body, req.url);
+  return;
+
   body = body.split('&');
   
   var result = {};
@@ -46,22 +50,3 @@ var extractGender = function(body, next) {
 }
 
 exports.process = process;
-
-
-// generate fake random input for debugging
-
-/*
-var segments = [
-  { segment: 'male' },
-  { segment: 'female' }
-], len = segments.length;
-
-var getRandomSegment = function() {
-  return segments[parseInt(Math.random() * len)];
-};
-
-setInterval(function() {
-    // push to websockets
-}, (Math.random() * 3000) + 2000);
-
-*/

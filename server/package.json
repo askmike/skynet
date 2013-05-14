@@ -1,6 +1,5 @@
 {
   "name": "skynet",
-  "preferGlobal": false,
   "version": "0.0.1",
   "author": "Mike van Rossum <mike@mikevanrossum.nl>",
   "description": "A proof of concept adaptive content system",

@@ -1,6 +1,10 @@
 var _ = require('underscore');
 var static = require('node-static');
 
+var port = 1344;
+
+var mongo = require('mongoose');
+
 // @link http://www.sitepoint.com/serving-static-files-with-node-js/
 var file = new(static.Server)('../client', {
   cache: 5,
@@ -11,15 +15,33 @@ var file = new(static.Server)('../client', {
 var processInput = require('./input.js').process;
 // push the results to a webclient to adapt the content
 var sockets = require('./sockets.js');
-// store data (model layer)
+// store data (redis)
 var log = require('./datastore.js');
+var logUser = log.user;
+// api
+var api = require('./api.js');
+var route = api.route;
 
 var handler = function(req, res) {
-  // if the request is data from the audience measuerment software route to input.js
-  if(req.url.indexOf('/eyeface-logviewer/') !== -1)
-    return processInput(req, res, log.user);
 
-  staticHandler(req, res);
+  processInput(req, res);
+  return;
+
+  // if the request is data from the audience measuerment software route to input.js
+  if(req.url.indexOf('/eyeface-logviewer/') !== -1) {
+    // processInput(req, res, logUser);
+    // processInput(req, res, sockets.update);
+    return;
+  }
+    
+
+  // if it's an api request
+  if(req.url.indexOf('/api/') !== -1)
+    return route(req, res);
+
+
+  res.end('I AM ALIVE');
+  // staticHandler(req, res);
 };
 
 // serve a static file
@@ -39,5 +61,5 @@ var staticHandler = function(req, res) {
 var app = require('http').createServer(handler);
 
 sockets.init(app);
-app.listen(1340);
+app.listen(port);
 console.log('SKYNET is watching us');
