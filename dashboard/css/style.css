@@ -1,0 +1,139 @@
+/* SKYNET style source */ 
+
+.male { 
+	background-color: rgba(16, 107, 255, 0.1);
+	background: rgba(16, 107, 255, 0.1);
+	color: #999;
+} 
+
+.female { 
+	background-color: rgba(255, 107, 255, 0.1);
+	background: rgba(255, 107, 255, 0.1);
+	color: #999;
+} 
+
+.sidebar-nav{ 
+	height:500px; 
+	margin-bottom:20px;
+} 
+
+.span9 > .row-fluid{ 
+	padding-left:10px;
+} 
+
+h2 + img + a{ 
+	margin-top:5px; 
+	float:right;  
+} 
+
+
+.nav-header1 {
+display: block;
+padding: 3px 15px;
+font-size: 14px;
+font-weight: bold;
+line-height: 20px;
+color: #999;
+text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+text-transform: uppercase;
+}
+
+.nextHead{
+	margin-top:25px; 
+}
+
+.counter{ 
+	font-weight:900; 
+	font-size: 37px;
+	margin-top:40px;
+} 
+
+.statistics{
+	margin-top:40px; 
+	text-align: center; 
+}
+
+ul li { 
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+
+/* ripped from lab.askmike.org/d3/timeline */
+
+path {
+  opacity: 0.5;
+  stroke-width: 2;
+}
+
+.tweets {
+  fill: #3F72BF;
+  opacity: 0.8;
+}
+
+.tweets,
+.mentions {
+  stroke-width: 0;
+}
+
+.hooverBlock {
+  opacity: 0;
+}
+
+.tooltip {
+  padding: 15px;
+  border-radius: 10px;
+  background-color: white;
+  pointer-events:none;
+  box-shadow: 5px 5px 10px black;
+  text-align: center;
+  opacity: 0.95;
+}
+
+.tweetPointer,
+.mentionPointer {
+  fill: none;
+  stroke-width: 5;
+  opacity: 0.8;
+}
+
+.tweetPointer {
+ stroke: black;
+ opacity: 0.6;
+}
+
+.mentionPointer {
+  stroke: black;
+  opacity: 0.5;
+}
+
+.label {
+  font-weight: 600;
+}
+
+.christmas {
+  fill: darkgreen;
+  opacity: 0.5;
+}
+
+.break {
+  fill: green;
+  opacity: 0.5;
+}
+
+text,
+div,
+article {
+  font-family: "Source Sans Pro", "Helvetica", "Arial", sans-serif;
+}
+
+.triangle {
+  fill: #698dc6;
+  opacity: 1;
+}
+
+.legendaTweets circle {
+  fill: #698dc6;
+}
