@@ -12,7 +12,7 @@ mongoose.connect('mongodb://localhost/skynet');
 var vineSchema = Schema({
   // meta
   url: { type: String, unique: true, index: true },
-  duration: Number,
+  duration: { type: Number, default: 6 },
   added: { type: Date, default: Date.now },
   // theme
   theme: String,

@@ -1,9 +1,9 @@
 var _ = require('underscore');
 var static = require('node-static');
 
-var port = 1344;
+var port = 1340;
 
-var mongo = require('mongoose');
+var mongo = require('./mongoose.js');
 
 // @link http://www.sitepoint.com/serving-static-files-with-node-js/
 var file = new(static.Server)('../client', {
@@ -24,13 +24,10 @@ var route = api.route;
 
 var handler = function(req, res) {
 
-  processInput(req, res);
-  return;
-
   // if the request is data from the audience measuerment software route to input.js
   if(req.url.indexOf('/eyeface-logviewer/') !== -1) {
-    // processInput(req, res, logUser);
-    // processInput(req, res, sockets.update);
+    processInput(req, res, logUser);
+    processInput(req, res, sockets.update);
     return;
   }
     
@@ -40,12 +37,13 @@ var handler = function(req, res) {
     return route(req, res);
 
 
-  res.end('I AM ALIVE');
-  // staticHandler(req, res);
+  // res.end('I AM ALIVE');
+  staticHandler(req, res);
 };
 
 // serve a static file
 var staticHandler = function(req, res) {
+  console.log('a');
   req.addListener('end', function() {
     file.serve(req, res, function(err, result) {
       if (err) {
@@ -55,7 +53,6 @@ var staticHandler = function(req, res) {
       }
     });
   });
-
 }
 
 var app = require('http').createServer(handler);

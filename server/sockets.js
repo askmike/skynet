@@ -14,10 +14,9 @@ var init = function(app) {
 
 }
 
-var updateClient = function(seg) {
-  console.log('sending new segment:\t' + seg);
-  io.sockets.emit('newSegment', {segment: seg});
-  lastSeg = seg;
+var updateClient = function(vine) {
+  console.log('sending new video in theme :\t', vine.theme, '\tof segment', vine.segment);
+  io.sockets.emit('newVine', vine);
 }
 
 exports.init = init;
