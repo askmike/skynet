@@ -24,7 +24,6 @@ var lastGender, i = 1;
 var extractGender = function(body, next, req) {
 
   console.log('new message', body, req.url);
-  return;
 
   body = body.split('&');
   
@@ -45,6 +44,8 @@ var extractGender = function(body, next, req) {
     gender = 'male';
   else
     gender = 'female';
+
+  console.log('detected gender');
 
   next && next(gender, result.age);
 }

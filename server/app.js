@@ -24,26 +24,25 @@ var route = api.route;
 
 var handler = function(req, res) {
 
+  if(req.url.indexOf('/eyeface-logviewer/camera/ping/') !== -1)
+    return res.end('I AM ALIVE');
+
   // if the request is data from the audience measuerment software route to input.js
-  if(req.url.indexOf('/eyeface-logviewer/') !== -1) {
+  if(req.url.indexOf('/eyeface-logviewer/camera/notification/') !== -1) {
+    console.log('routing to logUser');
     processInput(req, res, logUser);
-    processInput(req, res, sockets.update);
+    // processInput(req, res, sockets.update);
     return;
   }
-    
 
-  // if it's an api request
   if(req.url.indexOf('/api/') !== -1)
     return route(req, res);
 
-
-  // res.end('I AM ALIVE');
   staticHandler(req, res);
 };
 
 // serve a static file
 var staticHandler = function(req, res) {
-  console.log('a');
   req.addListener('end', function() {
     file.serve(req, res, function(err, result) {
       if (err) {
