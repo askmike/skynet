@@ -1,23 +1,30 @@
 var io;
+// cache
+var vines = [];
+var segment = { segment: 'male' };
+
+// send a new list of vines to the client
+var updateVines = function(v) {
+  vines = v;
+  io.sockets.emit('newVines', v);
+}
+
+// tell the client to play a new segment
+var updateSegment = function(s) {
+  // console.log('sending new segment: ', s);
+  segment = { segment: s }
+  io.sockets.emit('newSegment', segment);
+}
 
 var init = function(app) {
   io = require('socket.io').listen(app);
   io.set('log level', 1);
 
   io.sockets.on('connection', function(socket) {
-    socket.emit('newSegment', { segment: 'male' });
-    socket.on('updateSegment', function(segment) {
-      console.log('got new segment', segment);
-      io.sockets.emit('newSegment', segment);
-    });
+    socket.emit('newVines', vines);
+    socket.emit('newSegment', segment);
   });
-
-}
-
-var updateClient = function(vine) {
-  console.log('sending new video in theme :\t', vine.theme, '\tof segment', vine.segment);
-  io.sockets.emit('newVine', vine);
 }
 
 exports.init = init;
-exports.update = updateClient;
+exports.updateSegment = updateSegment;
