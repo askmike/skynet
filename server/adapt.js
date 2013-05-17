@@ -34,7 +34,7 @@ Decider.prototype.cleanSegments = function() {
 Decider.prototype.segment = function(newSegment) {
   this.cleanSegments();
 
-  this.segments[ newSegment ].push( moment();
+  this.segments[ newSegment ].push( moment() );
 
   // get the segment with the most viewers currently 
   // watching the screen
