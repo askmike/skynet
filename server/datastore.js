@@ -56,7 +56,6 @@ var getMinute = function() {
 // the amount of people at age x per day.
 var prefix = 'skynet:v0.2';
 var logUser = function(gender, age) {
-  console.log('new user', gender, age);
   age = age + '';
 
   client.incr(prefix + ':alltime:people');

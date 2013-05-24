@@ -1,6 +1,7 @@
 body {
   margin: 0;
   display: none;
+  cursor: none;
 }
 
 .content {
@@ -10,7 +11,7 @@ body {
 }
 
 video {
-  width: 800px;
+  height: 90%;
   margin: 50px auto 0;
   display: block;
 }

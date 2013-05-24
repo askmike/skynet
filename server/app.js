@@ -21,7 +21,7 @@ var decide = new Decider;
 var sockets = require('./sockets.js');
 
 var onSegment = [
-  // sockets.updateSegment,
+  sockets.updateSegment,
   function(seg) {
     console.log('\tsetting segment: ', seg);  
   }
@@ -44,7 +44,8 @@ var logUser = datastore.user;
 
 var onViewer = [
   decide.segment,
-  logUser
+  logUser,
+  
 ];
 
 _.each(onViewer, function(fn) {
