@@ -1,7 +1,22 @@
 var _ = require('underscore');
 var static = require('node-static');
+var moment = require('moment');
 
-var port = 1340;
+// we currently have two different test setups on two remote 
+// locations. To make sure the data doesn't get mixed up we run
+// two node servers. If the ddk is not set we assume this is the
+// location.
+// 
+// We use this hacky solution because it is about the only thing we can easily
+// change on the computer vision software per location is the servername and
+// the port.
+if(process.argv.ddk) {
+  console.log(moment().format('YYY-MM-DD HH:mm:ss'), 'setting up skynet for DDK location');
+  var port = 1340;
+} else {
+  console.log(moment().format('YYY-MM-DD HH:mm:ss'), 'setting up skynet for SSG location');
+  var port = 1341;
+}
 
 // @link http://www.sitepoint.com/serving-static-files-with-node-js/
 var file = new(static.Server)('../client', {

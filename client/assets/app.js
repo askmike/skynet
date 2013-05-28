@@ -1,11 +1,28 @@
+var preloadVines = function(cb) {
+  cb();
+
+  var allVines = [];
+  _.each(themes, function(t) {
+    allVines = allVines.concat(t.vines);
+  });
+
+  console.log('preloading', allVines.length, 'vines');
+
+  _.each(allVines, function(vine, i) {
+    $('<video />', {src: vine, preload: 'auto'}).on('canplaythrough', function() {
+      console.log('preloaded vine');
+    });
+  });
+}
+
 var init = function() {
-  var socket = io.connect('http://mvr.me:1340');
 
   var page = $('html').data('page');
 
   $('body').show();
-
-  listen(socket);  
+  preloadVines(function() {
+    listen();
+  });
 };
 
 var themes = [
@@ -175,7 +192,10 @@ var segments = {
   ]
 }
 
-var listen = function(socket) {
+var listen = function() {
+  console.log('loaded vines', 'listening');
+
+  var socket = io.connect('http://mvr.me:1340');
 
   socket.on('newSegment', function(data) {
     updateContent(data.segment);
@@ -189,7 +209,6 @@ var listen = function(socket) {
   var currentSegment;
 
   var next;
-  var i = 0;
   var updateContent = function(segment) {
     if(!segment)
       segment = currentSegment
@@ -207,7 +226,7 @@ var listen = function(socket) {
     });
 
     var vi = Math.round(Math.random() * (theme.vines.length - 1));
-    console.log(i < 100 ? '[PRELOAD]' : 'selected', 'vine:', vi, 'from theme: ', theme.theme);
+    console.log('selected', 'vine:', vi, 'from theme: ', theme.theme);
     var vine = theme.vines[vi];
 
     el
@@ -216,26 +235,8 @@ var listen = function(socket) {
         .get(0) 
           .play();
 
-    // first 1000 runs are preloads so we cache
-    // hacky stuff aight
-    if(i++ < 100)
-      next = setTimeout(updateContent, 100);
-    else
-      next = setTimeout(updateContent, 7000);
+    next = setTimeout(updateContent, 7000);
   }
-
-  // var preloadVines = function() {
-  //   var allVines = [];
-  //   _.each(themes, function(t) {
-  //     allVines = allVines.concat(t.vines);
-  //   });
-
-  //   _.each(allVines, function(vine) {
-  //     $('<video />', {src: vine});
-  //   });
-  // }
-
-  // preloadVines();
 };
 
 $(init);
