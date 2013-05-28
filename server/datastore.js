@@ -54,7 +54,11 @@ var getMinute = function() {
 // the amount of people that walked by per day
 // the amount of people that walked by per minute
 // the amount of people at age x per day.
-var prefix = 'skynet:v0.2';
+if(process.argv.ddk)
+  var prefix = 'skynet:v0.2';
+else
+  var prefix = 'skynet:sgg:v0.2';
+
 var logUser = function(gender, age) {
   age = age + '';
 

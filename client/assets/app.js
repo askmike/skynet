@@ -1,30 +1,3 @@
-var preloadVines = function(cb) {
-  cb();
-
-  var allVines = [];
-  _.each(themes, function(t) {
-    allVines = allVines.concat(t.vines);
-  });
-
-  console.log('preloading', allVines.length, 'vines');
-
-  _.each(allVines, function(vine, i) {
-    $('<video />', {src: vine, preload: 'auto'}).on('canplaythrough', function() {
-      console.log('preloaded vine');
-    });
-  });
-}
-
-var init = function() {
-
-  var page = $('html').data('page');
-
-  $('body').show();
-  preloadVines(function() {
-    listen();
-  });
-};
-
 var themes = [
   {
   theme: " Design  ",
@@ -208,7 +181,7 @@ var listen = function() {
 
   var currentSegment;
 
-  var next;
+  var next, last;
   var updateContent = function(segment) {
     if(!segment)
       segment = currentSegment
@@ -229,6 +202,13 @@ var listen = function() {
     console.log('selected', 'vine:', vi, 'from theme: ', theme.theme);
     var vine = theme.vines[vi];
 
+    if(last === vine) {
+      console.log('same as last, rerolling');
+      return updateContent();
+    }
+
+    last = vine;
+
     el
       .html( template( vine ) )
       .children()
@@ -237,6 +217,30 @@ var listen = function() {
 
     next = setTimeout(updateContent, 7000);
   }
+};
+
+var preloadVines = function() {
+  var allVines = [];
+  _.each(themes, function(t) {
+    allVines = allVines.concat(t.vines);
+  });
+
+  console.log('preloading', allVines.length, 'vines');
+
+  _.each(allVines, function(vine) {
+    $('<video />', {src: vine, preload: 'auto'}).on('canplaythrough', function() {
+      console.log('preloaded vine');
+    });
+  });
+}
+
+var init = function() {
+
+  var page = $('html').data('page');
+
+  $('body').show();
+  preloadVines();
+  listen();
 };
 
 $(init);

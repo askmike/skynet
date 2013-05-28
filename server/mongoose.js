@@ -1,11 +1,13 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-mongoose.connect('mongodb://localhost/skynet');
+if(process.argv.ddk)
+  mongoose.connect('mongodb://localhost/skynet');
+else
+  mongoose.connect('mongodb://localhost/skynet-sgg');
 
 // 
 //        2 segments: male and female
 // 
-
 
 // 
 // Each vine movie
