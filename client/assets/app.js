@@ -219,13 +219,47 @@ var listen = function() {
   }
 };
 
-var preloadVines = function() {
+
+// preload vines by looping through all vines
+var preloopVines = function(cur) {
+  if(!cur) {
+    cur = 0;
+    console.log('starting preloop');  
+  } else
+    console.log('currently looping', cur + 1);  
+
   var allVines = [];
   _.each(themes, function(t) {
     allVines = allVines.concat(t.vines);
   });
 
+  var el = $('main');
+  var template = function(vine) {
+    return '<video loop preload="auto" muted="true" src="' + vine + '"></video>';
+  }
+
+  if(cur++ === _.size(allVines))
+    return listen();
+  
+  el
+    .html( template( allVines[cur] ) )
+    .children()
+      .get(0) 
+        .play();
+
+  setTimeout(preloopVines, 4000, cur);
+}
+
+
+
+
+// create a video element to start preloading all vines
+// all at once.
+var preloadVines = function() {
+
   console.log('preloading', allVines.length, 'vines');
+
+  
 
   _.each(allVines, function(vine) {
     $('<video />', {src: vine, preload: 'auto'}).on('canplaythrough', function() {
@@ -234,13 +268,28 @@ var preloadVines = function() {
   });
 }
 
+var el = $('main');
+
 var init = function() {
 
   var page = $('html').data('page');
 
   $('body').show();
-  preloadVines();
-  listen();
+
+  var allVines = [];
+  _.each(themes, function(t) {
+    allVines = allVines.concat(t.vines);
+  });
+
+  var el = $('main');
+
+  console.log(location.hash);
+  if(location.hash === '#preloop') {
+    preloopVines();
+  } else {
+    preloadVines();
+    listen();
+  }
 };
 
 $(init);
