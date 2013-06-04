@@ -12,6 +12,10 @@ var InputHandler = function() {
   // the coldlist buffers all viewers until they
   // are not visible anymore
   this.coldlist = [];
+
+  _.bindAll(this);
+
+  setInterval(this.processViewers, 1000);
 };
 InputHandler.prototype.__proto__ = require('events').EventEmitter.prototype;
 
@@ -24,6 +28,8 @@ InputHandler.prototype.process = function(req, res) {
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.end('I AM ALIVE');
     
+    // console.log('LETTERLIJKE STRING\n\n', body);
+
     this.body = body.split('&');
     this.req = req;
 
@@ -33,7 +39,7 @@ InputHandler.prototype.process = function(req, res) {
       this.result[_.first(part)] = _.last(part);
     }, this);
 
-    // this.updateViewers(); // coldlist
+    this.updateViewers(); // coldlist
     this.extractGender(); // hotlist
   }, this));
 };
@@ -44,7 +50,7 @@ InputHandler.prototype.process = function(req, res) {
 //
 
 
-// is an ID a known? Update / add it on the htlist
+// is an ID a known? Update / add it on the hotlist
 InputHandler.prototype.newUser = function(id) {
   this.cleanUsers();
 
@@ -101,19 +107,25 @@ InputHandler.prototype.extractGender = function() {
 //        USERS: COLDLIST
 //        for data storage
 //
-
 InputHandler.prototype.updateViewers = function() {
-  console.log('updating viewers in coldlist');
+  if(this.result.person === '0' || this.result.actionid !== '9')
+    return;
+
   // do we have this record?
   var list = _.pluck(this.coldlist, 'id');
   var pos = _.indexOf(list, this.result.person);
-  
+
   if(pos !== -1) {
     // update record
-    console.log('known in coldlist:', pos);
+    this.coldlist[pos].count++;
     this.coldlist[pos].duration = this.result.duration;
+    // is the person looking?
+    // TODO: we are not getting jaw position atm
+    // this.coldlist[pos].attention++;
   } else { // new record
     this.coldlist.push({
+      count: 0,
+      attention: 0,
       id: this.result.person,
       start: moment(),
       duration: this.result.duration
@@ -127,17 +139,22 @@ InputHandler.prototype.processViewers = function() {
   var toRemove = [];
   var treshold = moment().subtract('s', 10);
   _.each(this.coldlist, function(viewer) {
-    var lastUpdate = moment(viewer.start).add('ms', viewer.duration);
+    if(viewer.id === '0')
+      return;
+
+    var lastUpdate = viewer.start.clone().add('ms', viewer.duration);
     if(lastUpdate > treshold)
       return;
 
-    console.log('\tREMOVING FROM COLDLIST:', viewer);
+    console.log('\tREMOVING FROM COLDLIST:', viewer.id, viewer.duration);
+    // todo: add to mongo
     toRemove.push(viewer.id);
   });
 
+  // console.log(toRemove);
 
   this.coldlist = _.filter(this.coldlist, function(viewer) {
-    return _.indexOf(toRemove, viewer.id) !== -1;
+    return _.indexOf(toRemove, viewer.id) === -1;
   });
 }
 

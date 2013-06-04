@@ -47,7 +47,7 @@ _.each(onSegment, function(fn) {
 });
 
 // store data (mongo)
-// var mongoose = require('./mongoose.js');
+var mongoose = require('./mongoose.js');
 
 // api
 var api = require('./api.js');
@@ -79,6 +79,9 @@ var router = function(req, res) {
     return;
   }
 
+  if(req.url.indexOf('/api/refresh') !== -1)
+    return sockets.refresh(req, res);
+
   if(req.url.indexOf('/api/') !== -1)
     return route(req, res);
 
@@ -100,6 +103,6 @@ var staticHandler = function(req, res) {
 
 var app = require('http').createServer(router);
 
-sockets.init(app);
+sockets.init(app, mongoose.storeVine);
 app.listen(port);
 console.log('SKYNET is watching us');

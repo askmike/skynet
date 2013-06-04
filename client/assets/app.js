@@ -1,4 +1,32 @@
-var port = 1340;
+var port = 1341;
+
+var now = function() {
+  return moment().format('DD-MM HH:mm:ss');
+}
+
+var template = function(vine) {
+  return '<video loop preload="auto" muted="true" src="' + vine + '"></video>';
+}
+
+var lastPlay;
+
+var playVine = function(vine) {
+  vine.start = new Date;
+  // put the vine on screen
+  el
+    .html( template( vine.vine ) )
+    .children()
+      .get(0)
+        .play();
+  // let the backend know what vine we are playing
+  if(lastPlay)
+    socket.emit('playedVine', _.extend(lastPlay, { end: new Date }));
+
+
+  lastPlay = vine;
+}
+
+var socket;
 
 var listen = function(vines) {
   var allVines = [];
@@ -6,20 +34,15 @@ var listen = function(vines) {
     allVines = allVines.concat(t.vines);
   });
 
-  console.log('loaded vines', 'listening');
+  console.log(now(), 'loaded vines', 'listening on port :' + port);
 
-  var socket = io.connect('http://mvr.me:' + port);
+  socket = io.connect('http://mvr.me:' + port);
 
   socket.on('newSegment', function(data) {
     updateContent(data.segment);
   });
 
   socket.on('refresh', restart);
-
-  var el = $('main');
-  var template = function(vine) {
-    return '<video loop preload="auto" muted="true" src="' + vine + '"></video>';
-  }
 
   var currentSegment;
 
@@ -28,7 +51,7 @@ var listen = function(vines) {
     if(!segment)
       segment = currentSegment
     else {
-      console.log('new segment:', segment);
+      console.log(now(), 'new segment:', segment);
       clearTimeout(next);
     }
     currentSegment = segment;
@@ -43,21 +66,17 @@ var listen = function(vines) {
       }
     });
     var vi = Math.round(Math.random() * (_.size(theme) - 1));
-    console.log('selected', 'vine:', vi, 'from theme: ', themeName);
+    console.log(now(), 'selected', 'vine:', vi, 'from theme: ', themeName);
     var vine = theme[vi];
 
     if(last === vine) {
-      console.log('same as last, rerolling');
+      console.log(now(), 'same as last, rerolling');
       return updateContent();
     }
 
     last = vine;
 
-    el
-      .html( template( vine.vine ) )
-      .children()
-        .get(0) 
-          .play();
+    playVine(vine);
 
     next = setTimeout(updateContent, 7000);
   }
@@ -66,7 +85,7 @@ var listen = function(vines) {
 var el = $('main');
 
 var restart = function() {
-  console.log('RESTARTING NOW');
+  console.log(now(), 'RESTARTING NOW');
   location.reload(true);
 }
 
@@ -108,8 +127,6 @@ var init = function() {
   var page = $('html').data('page');
 
   $('body').show();
-
-  console.log('start', moment().format('HH:mm:ss'));
   $.getJSON('vines.json', listen);
 };
 
